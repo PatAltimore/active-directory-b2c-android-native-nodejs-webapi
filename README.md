@@ -55,10 +55,14 @@ To use Azure AD B2C, you'll first need to create an Azure AD B2C tenant, registe
 
 3. Install the node dependencies: 
 
-```npm install && npm update```
+	```
+	npm install && npm update
+	```
 4. Run the Web API!
 
-```node index.js```
+	```
+	node index.js
+	```
 
 ### You're Done!
 
