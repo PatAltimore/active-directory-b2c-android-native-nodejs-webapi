@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+
+def computeVersionCode(versionName) {
+  def parts = versionName.replaceAll('[^-\\d]', '').replaceAll('[-]$', '').split('-', 3)
+  def versionCode = 0.0
+  parts.eachWithIndex() { part, i ->
+    if (i<2) {
+      versionCode += (Math.pow(10, ((1-i) * 4)) * part.toInteger())
+    }
+  }
+  versionCode.toInteger()
+}
+
+def gitSha() {
+  'git rev-parse --short HEAD'.execute().text.trim()
+}
+
+def buildTime() {
+  new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
+}
+
+android {
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+
+  defaultConfig {
+    minSdkVersion 9
+    targetSdkVersion rootProject.ext.compileSdkVersion
+
+    versionName rootProject.ext.versionName
+    versionCode computeVersionCode(rootProject.ext.versionName)
+
+    buildConfigField 'String', 'GIT_SHA', "\"${gitSha()}\""
+    buildConfigField 'String', 'BUILD_TIME', "\"${buildTime()}\""
+  }
+
+  buildTypes {
+    debug {
+      versionNameSuffix '-debug'
+    }
+  }
+
+  lintOptions {
+    // temporary fix for https://code.google.com/p/android/issues/detail?id=64014
+    disable 'InvalidPackage'
+  }
+
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      res.srcDirs = ['res']
+    }
+  }
+}
+
+
+dependencies {
+    compile project(':library')
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.1') {
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
+    compile('com.github.kevinsawicki:http-request:6.0') {
+        exclude group: 'junit', module: 'junit'
+    }
+  testCompile 'junit:junit:4.10'
+    testCompile 'org.robolectric:robolectric:2.1.+'
+}
+
+File signFile = rootProject.file('sign.properties')
+if (signFile.exists()) {
+  Properties p = new Properties()
+  p.load(new FileInputStream(signFile))
+  android {
+    signingConfigs {
+      release {
+        storeFile file(p.KEYSTORE)
+        storePassword p.KEYSTORE_PASSWORD
+        keyAlias p.KEY_ALIAS
+        keyPassword p.KEY_PASSWORD
+      }
+    }
+  }
+  android.buildTypes.release.signingConfig android.signingConfigs.release
+}

@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="app_name_short">android-oauth-client-samples</string>
+    <string name="app_name_long">Azure AD B2C Sample</string>
+    <string name="loading">Loading</string>
+    <string name="error_occured">Error</string>
+    <string name="empty">Empty</string>
+    <string name="get_token">Login</string>
+    <string name="delete_token">Delete Token</string>
+    <string name="delete_cookies">Delete cookies</string>
+    <string name="sample_oauth2_azureb2c">Azure AD B2C (OAuth 2.0 Auth Code)</string>
+    <string name="token_azureb2c">azureb2c</string>
+    <string name="token_customui">customui</string>
+    <string name="licenses">Open Source Licenses</string>
+    <string name="full_screen">Full screen auth page</string>
+    <string name="dialog">Dialog auth page</string>
+
+</resources>
