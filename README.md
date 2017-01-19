@@ -12,26 +12,29 @@ This sample demonstrates how to use Azure AD B2C with a prominent 3rd party Andr
 
 To use Azure AD B2C, you'll first need to create an Azure AD B2C tenant, register your application, and create some sign in and sign up experiences.  
 
--To create an Azure AD B2C tenant checkout [these steps](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-get-started).
--Register your app, checkout [these steps](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-app-registration).  
--You can now define your [custom sign in and sign up experience](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-policies).  In Azure AD B2C, you define the experience your end users will encounter by creating `policies`.  For this sample, you'll want to create a single combined Sign In/Sign up policy. 
+-To create an Azure AD B2C tenant, checkout [these steps](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-get-started).
+
+-To register your app, checkout [these steps](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-app-registration).  
+
+-You can now define your [custom sign in and sign up experience](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-reference-policies).  In Azure AD B2C, you define the experience your end users will encounter by creating policies.  For this sample, you'll want to create a single combined Sign In/Sign up policy. 
+
 -Clone the code.
+
 ```git clone https://github.com/Azure-Samples/active-directory-b2c-android-native-nodejs-webapi.git```
+
 ### Setting up the Android App
 
 1. In Android Studio, open an existing project and open the `android-oauth-client`.  You will likely get a few errors and need to install some additional tools in Android Studio. Follow the prompts and let Android Studio update the local data. 
 
-2. Inside `/samples/java/.../azureb2c/Azureb2cConstants.java`, you'll see a few variables to set including:
+2. Inside `/samples/java/.../azureb2c/Azureb2cConstants.java`, replace the following fields:
 
-	-CLIENT_ID which can be found in the Azure Portal B2C under the label Application ID.
+	-`CLIENT_ID` which can be found in the Azure Portal B2C under the label Application ID.
 
-	-Replace `<Your Policy Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of the sign in/sign up policy you created.
+	-`<Your Policy Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of the sign in/sign up policy.
 
-	-Replace `<Your Tenant Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of your Azure AD B2C tenant you created. 
-	
-The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`. 
+	-`<Your Tenant Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of your Azure AD B2C tenant. 
 
-3. Go ahead and try the app.  You'll be able to see your custom experience, sign up for an account, and sign in to an existing account. The app will immediately crash after you sign in unless you complete the Node.JS steps!
+3. Go ahead and try the app.  You'll be able to see your custom experience, sign up for an account, and sign in to an existing account. The app will immediately crash after you sign in unless you complete the Node.JS steps! The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`.
 
 > [!NOTE]
 > This sample uses the Android embeded Webview meaning tokens are stored in both persistent storage and in session cookies.  When the sample performs a logout, it will remove all session cookies as Android doesn't allow specific session cookies to be removed. 
@@ -40,7 +43,7 @@ The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Act
 
 ### Setting up the Node.js Web API
 
-1. You should've already cloned the app before, go ahead and open the `token-validator-service-nodejs/index.js` with any text editor. Make sure you've (installed Node)[https://nodejs.org/en/download/]. 
+1. You should've already cloned the app before, go ahead and open the `token-validator-service-nodejs/index.js` with any text editor. Make sure you've [installed Node](https://nodejs.org/en/download/). 
 
 2. Replace the following fields:
 
@@ -51,9 +54,11 @@ The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Act
 	-`<Your Tenant Name>` inside the identityMetadata variable with the name of your Azure AD B2C tenant you created.
 
 3. Run the following command: 
+
 ```npm install && npm update```
 
 4. Run the Web API!
+
 ```node index.js```
 
 ### You're Done!
@@ -67,22 +72,22 @@ Now run both the Android app and Node web API at the same time.  You'll see afte
 
 ## Next Steps
 
-Customize your user experience further by supporting other identity providers.  Checkout the docs belows to learn how to add additional providers: 
+Customize your user experience further by supporting more identity providers.  Checkout the docs belows to learn how to add additional providers: 
 
--[Microsoft](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-msa-app)
+[Microsoft](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-msa-app)
 
--[Facebook](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-fb-app)
+[Facebook](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-fb-app)
 
--[Google](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-goog-app)
+[Google](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-goog-app)
 
--[Amazon](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-amzn-app)
+[Amazon](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-amzn-app)
 
--[LinkedIn](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-li-app)
+[LinkedIn](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-li-app)
 
 
 ## Questions & Issues
 
-Please file any questions or problems with the sample as a github issue in this repo.  You can also post on Stackoverflow with the tag `azure-ad-b2c`. For OAuth2.0 library issues, please see note below. 
+Please file any questions or problems with the sample as a github issue.  You can also post on Stackoverflow with the tag `azure-ad-b2c`. For OAuth2.0 library issues, please see note below. 
 
 ## Acknowledgements
 
@@ -91,7 +96,7 @@ Please file any questions or problems with the sample as a github issue in this 
 >
 >
 
-[android-oauth-client](https://github.com/wuman/android-oauth-client):  The Android library and sample was adapted from this open-source oAuth client library. 
+[android-oauth-client](https://github.com/wuman/android-oauth-client)-  This  sample was adapted from this open-source oAuth client library. 
 
 [Crouton](https://github.com/keyboardsurfer/Crouton)
 
