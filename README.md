@@ -22,11 +22,14 @@ To use Azure AD B2C, you'll first need to create an Azure AD B2C tenant, registe
 1. In Android Studio, open an existing project and open the `android-oauth-client`.  You will likely get a few errors and need to install some additional tools in Android Studio. Follow the prompts and let Android Studio update the local data. 
 
 2. Inside `/samples/java/.../azureb2c/Azureb2cConstants.java`, you'll see a few variables to set including:
+
 	-CLIENT_ID which can be found in the Azure Portal B2C under the label Application ID.
+
 	-Replace `<Your Policy Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of the sign in/sign up policy you created.
+
 	-Replace `<Your Tenant Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of your Azure AD B2C tenant you created. 
 	
-To checkout where the OAuth 2.0 flows are happening, see `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`. 
+The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`. 
 
 3. Go ahead and try the app.  You'll be able to see your custom experience, sign up for an account, and sign in to an existing account. The app will immediately crash after you sign in unless you complete the Node.JS steps!
 
@@ -40,8 +43,11 @@ To checkout where the OAuth 2.0 flows are happening, see `/samples/java/.../azur
 1. You should've already cloned the app before, go ahead and open the `token-validator-service-nodejs/index.js` with any text editor. Make sure you've (installed Node)[https://nodejs.org/en/download/]. 
 
 2. Replace the following fields:
+
 	-`clientID` with the same Client/App ID as you used in the Android code. 
+
 	-`policyName` with the same name as before.
+
 	-`<Your Tenant Name>` inside the identityMetadata variable with the name of your Azure AD B2C tenant you created.
 
 3. Run the following command: 
@@ -62,10 +68,15 @@ Now run both the Android app and Node web API at the same time.  You'll see afte
 ## Next Steps
 
 Customize your user experience further by supporting other identity providers.  Checkout the docs belows to learn how to add additional providers: 
+
 -[Microsoft](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-msa-app)
+
 -[Facebook](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-fb-app)
+
 -[Google](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-goog-app)
+
 -[Amazon](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-amzn-app)
+
 -[LinkedIn](https://docs.microsoft.com/en-us/azure/active-directory-b2c/active-directory-b2c-setup-li-app)
 
 
@@ -81,6 +92,9 @@ Please file any questions or problems with the sample as a github issue in this 
 >
 
 [android-oauth-client](https://github.com/wuman/android-oauth-client):  The Android library and sample was adapted from this open-source oAuth client library. 
+
 [Crouton](https://github.com/keyboardsurfer/Crouton)
+
 [Google Play Services](https://developers.google.com/android/guides/overview)
+
 [Passport.js](http://passportjs.org/)
