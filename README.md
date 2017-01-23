@@ -6,6 +6,11 @@ author: dadobali
 
 # Azure AD B2C Android Sample
 
+> [!NOTE]
+> This sample is a public preview of how to use Azure AD B2C with Android. It is important to note Google [has announed](https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html) that they will end support for embedded web-views on April 20, 2017.  We are taking steps to prepare for this change, and will publish new code samples and recommendations soon.  At that point, any app that supports Google authentication will be required to switch to using the device browser which will require using a new oAuth2.0 library.  
+> 
+>
+
 This sample demonstrates how to use Azure AD B2C with a prominent 3rd party Android OAuth2.0 library [android-oauth-client](https://github.com/wuman/android-oauth-client). There's 3 parts of this sample you'll have to setup to get this running: do some configurations in our Azure portal and define your experience, configure/run the Android app, and finally configure/run the Node.js Web API. 
 
 ## Steps to Run
@@ -37,7 +42,8 @@ To use Azure AD B2C, you'll first need to create an Azure AD B2C tenant, registe
 3. Go ahead and try the app.  You'll be able to see your custom experience, sign up for an account, and sign in to an existing account. The app will immediately crash after you sign in unless you complete the Node.JS steps! The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`.
 
 > [!NOTE]
-> This sample uses the Android embeded Webview meaning tokens are stored in both persistent storage and in session cookies.  When the sample performs a logout, it will remove all session cookies as Android doesn't allow specific session cookies to be removed. 
+> This sample uses the Android embeded 
+meaning tokens are stored in both persistent storage and in session cookies.  When the sample performs a logout, it will remove all session cookies as Android doesn't allow specific session cookies to be removed. 
 > 
 >
 
