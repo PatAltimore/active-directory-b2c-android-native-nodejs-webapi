@@ -98,6 +98,8 @@ Customize your user experience further by supporting more identity providers.  C
 
 Please file any questions or problems with the sample as a github issue.  You can also post on Stackoverflow with the tag `azure-ad-b2c`. For OAuth2.0 library issues, please see note below. 
 
+This sample was built and tested with the Android Virtual Device Manager on versions 22-24 using Android Studio 2.1.2. 
+
 ## Acknowledgements
 
 > [!NOTE]
