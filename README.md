@@ -7,7 +7,7 @@ author: dadobali
 # Azure AD B2C Android Sample
 
 > [!NOTE]
-> This sample is a public preview of how to use Azure AD B2C with Android. It is important to note Google [has announed](https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html) that they will end support for embedded web-views on April 20, 2017.  We are taking steps to prepare for this change, and will publish new code samples and recommendations soon.  At that point, any app that supports Google authentication will be required to switch to using the device browser which will require using a new oAuth2.0 library.  
+> This sample is a public preview of how to use Azure AD B2C with Android. It is important to note Google [has announced](https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html) that they will end support for embedded web-views on April 20, 2017.  We are taking steps to prepare for this change, and will publish new code samples and recommendations soon.  At that point, any app that supports Google authentication will be required to switch to using the device browser which will require using a new oAuth2.0 library.  
 > 
 >
 
