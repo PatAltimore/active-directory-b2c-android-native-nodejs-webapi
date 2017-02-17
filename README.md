@@ -103,7 +103,7 @@ This sample was built and tested with the Android Virtual Device Manager on vers
 ## Acknowledgements
 
 > [!NOTE]
-> Microsoft has tested the android-oauth-client library in basic Azure AD B2C scenarios and confirmed that it works with our service and thus considers it Microsoft Compatible.  Microsoft does not provide fixes for this library and has not done a full review of the library.  Issues and feature requests should be directed to the library's open source project linked below. 
+> Microsoft has tested the android-oauth-client library in basic Azure AD B2C scenarios and confirmed that it works with our service and thus considers it Microsoft Compatible.  Microsoft does not provide fixes for this library and has not done a full review of the library.  Issues and feature requests should be directed to the library's open source project linked below. Also, this library utilizes embedded web-views rather than the system browser. Google has announced that on April 20, 2017 they will no longer support Google Account sign in with embedded web-views at which point those wishing to support Google accounts will need to update libraries. 
 >
 >
 
