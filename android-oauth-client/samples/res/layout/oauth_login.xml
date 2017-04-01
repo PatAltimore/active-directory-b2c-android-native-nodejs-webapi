@@ -3,21 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button
-        android:id="@android:id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/get_token" />
-
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/txtDetails"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@android:id/button1"
+        android:layout_below="@+id/btnDeleteToken"
         android:layout_centerHorizontal="true"
-        android:textSize="12dp"
-        android:padding="?android:attr/scrollbarSize" />
+        android:padding="?android:attr/scrollbarSize"
+        android:textSize="12dp" />
+
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:text="@string/edit_profile"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:text="@string/get_token" />
+
+    <Button
+        android:id="@+id/btnDeleteToken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnEditProfile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="@string/delete_token"
+        android:visibility="invisible" />
 
 </RelativeLayout>

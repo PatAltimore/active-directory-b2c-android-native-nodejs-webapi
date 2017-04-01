@@ -2,7 +2,6 @@
 package com.microsoft.oauth.samples.azureb2c;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +12,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -46,15 +44,10 @@ import android.os.StrictMode;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class SimpleOAuth2Activity extends FragmentActivity {
 
     static final Logger LOGGER = Logger.getLogger(SamplesConstants.TAG);
-
-    /* If token expires in <=60, refresh it */
-    /* This default follows the oauth libraries default config */
-    static final Long NEAR_EXPIRATION_SECONDS = 60l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +81,10 @@ public class SimpleOAuth2Activity extends FragmentActivity {
             if (request.ok()) {
                 return request.body();
             } else {
-                LOGGER.info("Error calling backend, http code: " + request.code());
-                return null;
+                return "Error calling backend, http code: " + request.code();
             }
         } catch(Exception e) {
-            LOGGER.info("Exception in ValidateToken: " + e.toString());
-            return null;
+            return "Exception in ValidateToken: " + e.toString();
         }
     }
 
@@ -102,6 +93,7 @@ public class SimpleOAuth2Activity extends FragmentActivity {
 
         private static final int LOADER_GET_TOKEN = 0;
         private static final int LOADER_DELETE_TOKEN = 1;
+        private static final int LOADER_EDIT_PROFILE = 2;
 
         /* Since this sample was written using an Android emulator, you
          * must use 10.0.2.2 to loopback to the host
@@ -109,9 +101,12 @@ public class SimpleOAuth2Activity extends FragmentActivity {
         final String SERVICE_URL = "http://10.0.2.2:5000/api/claims";
 
         private OAuthManager oauth;
+        private OAuthManager oauthEditProfile;
 
-        private Button button;
-        private TextView message;
+        private Button btnLogin;
+        private Button btnDeleteToken;
+        private Button btnEditProfile;
+        private TextView txtDetails;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -133,38 +128,58 @@ public class SimpleOAuth2Activity extends FragmentActivity {
 
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
-            button = (Button) view.findViewById(android.R.id.button1);
-            setButtonText(R.string.get_token);
-            message = (TextView) view.findViewById(android.R.id.text1);
-            button.setOnClickListener(new View.OnClickListener() {
+            btnLogin = (Button) view.findViewById(R.id.btnLogin);
+            btnDeleteToken = (Button) view.findViewById(R.id.btnDeleteToken);
+            btnEditProfile = (Button) view.findViewById(R.id.btnEditProfile);
+
+            txtDetails = (TextView) view.findViewById(R.id.txtDetails);
+
+            btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (v.getTag().equals(R.string.get_token)) {
-                        if (getLoaderManager().getLoader(LOADER_GET_TOKEN) == null) {
-                            getLoaderManager().initLoader(LOADER_GET_TOKEN, null,
-                                    OAuthFragment.this);
-                        } else {
-                            getLoaderManager().restartLoader(LOADER_GET_TOKEN, null,
-                                    OAuthFragment.this);
-                        }
+                if (getLoaderManager().getLoader(LOADER_GET_TOKEN) == null) {
+                    getLoaderManager().initLoader(LOADER_GET_TOKEN, null,
+                            OAuthFragment.this);
+                } else {
+                    getLoaderManager().restartLoader(LOADER_GET_TOKEN, null,
+                            OAuthFragment.this);
+                }
+                }
+            });
+
+            btnDeleteToken.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getLoaderManager().getLoader(LOADER_DELETE_TOKEN) == null) {
+                        getLoaderManager().initLoader(LOADER_DELETE_TOKEN, null,
+                                OAuthFragment.this);
                     } else {
-                        if (getLoaderManager().getLoader(LOADER_DELETE_TOKEN) == null) {
-                            getLoaderManager().initLoader(LOADER_DELETE_TOKEN, null,
-                                    OAuthFragment.this);
-                        } else {
-                            getLoaderManager().restartLoader(LOADER_DELETE_TOKEN, null,
-                                    OAuthFragment.this);
-                        }
+                        getLoaderManager().restartLoader(LOADER_DELETE_TOKEN, null,
+                                OAuthFragment.this);
                     }
                 }
             });
+
+            btnEditProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getLoaderManager().getLoader(LOADER_EDIT_PROFILE) == null) {
+                        getLoaderManager().initLoader(LOADER_EDIT_PROFILE, null,
+                                OAuthFragment.this);
+                    } else {
+                        getLoaderManager().restartLoader(LOADER_EDIT_PROFILE, null,
+                                OAuthFragment.this);
+                    }
+                }
+            });
+
         }
 
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             boolean fullScreen = getActivity().getSharedPreferences("Preference", 0)
-                .getBoolean(SamplesActivity.KEY_AUTH_MODE, false);
+                .getBoolean(SamplesActivity.KEY_AUTH_MODE, true);
 
             // setup credential storage
             SharedPreferencesCredentialStore credentialStore =
@@ -208,66 +223,57 @@ public class SimpleOAuth2Activity extends FragmentActivity {
                         }
 
                     };
-
             oauth = new OAuthManager(flow, controller);
+
+
+            String authEndpointEditProfile = Azureb2cConstants.AUTHORIZATION_ENDPOINT_URL.replace(Azureb2cConstants.POLICY_NAME_SIGNUP_SIGNIN, Azureb2cConstants.POLICY_NAME_EDIT_PROFILE);
+            String tokenEndpointEditProfile = Azureb2cConstants.TOKEN_SERVER_URL.replace(Azureb2cConstants.POLICY_NAME_SIGNUP_SIGNIN, Azureb2cConstants.POLICY_NAME_EDIT_PROFILE);
+            AuthorizationFlow flowEditProfile = new AuthorizationFlow.Builder(
+                    BearerToken.authorizationHeaderAccessMethod(),
+                    OAuth.HTTP_TRANSPORT,
+                    OAuth.JSON_FACTORY,
+                    new GenericUrl(tokenEndpointEditProfile),
+                    new ClientParametersAuthentication(Azureb2cConstants.CLIENT_ID, null),
+                    Azureb2cConstants.CLIENT_ID,
+                    authEndpointEditProfile)
+                    .setScopes(Arrays.asList(Azureb2cConstants.CLIENT_ID, "offline_access"))
+                    .setCredentialStore(credentialStore)
+                    .build();
+            oauthEditProfile = new OAuthManager(flowEditProfile, controller);
         }
 
         @Override
         public Loader<AsyncResourceLoader.Result<Credential>> onCreateLoader(int id, Bundle args) {
             getActivity().setProgressBarIndeterminateVisibility(true);
-            button.setEnabled(false);
-            message.setText("");
+            btnLogin.setEnabled(false);
+            txtDetails.setText("");
             if (id == LOADER_GET_TOKEN) {
                 return new GetTokenLoader(getActivity(), oauth);
-            } else {
+            } else if (id == LOADER_DELETE_TOKEN) {
                 return new DeleteTokenLoader(getActivity(), oauth);
+            } else { //if (id == LOADER_DELETE_TOKEN) {
+                return new EditProfileLoader(getActivity(), oauthEditProfile);
             }
         }
 
         @Override
         public void onLoadFinished(Loader<AsyncResourceLoader.Result<Credential>> loader,
                 AsyncResourceLoader.Result<Credential> result) {
-            if (loader.getId() == LOADER_GET_TOKEN) {
-            } else {
-                message.setText("");
+
+            txtDetails.setText("");
+            int loaderId = loader.getId();
+            if (loaderId == LOADER_GET_TOKEN  || loaderId == LOADER_EDIT_PROFILE) {
+                getToken(loader, result);
             }
-            if (result.success) {
-                if (loader.getId() == LOADER_GET_TOKEN) {
-                    setButtonText(R.string.delete_token);
-
-                    if (result.data.getExpiresInSeconds() > NEAR_EXPIRATION_SECONDS) {
-
-                        /* You have your token, send it to your backend for validation */
-
-                        String validatedClaims = validateToken(SERVICE_URL,
-                                result.data.getAccessToken());
-                        message.setText("Validated Claims:\n\n" + validatedClaims);
-
-                        /* Now you can use the claims data for your App-specific logic! */
-
-                    } else {
-
-                        /* Use the Refresh Token to get new Access Token and then clear storage. */
-                        message.setText("Your Access Token is Expired.");
-                    }
-
-
-                } else {
-                    setButtonText(R.string.get_token);
-                }
-            } else {
-                setButtonText(R.string.get_token);
-                Crouton.makeText(getActivity(), result.errorMessage, Style.ALERT).show();
+            else if (loaderId == LOADER_DELETE_TOKEN) {
+                deleteToken(loader, result);
             }
             getActivity().setProgressBarIndeterminateVisibility(false);
-            button.setEnabled(true);
         }
 
         @Override
         public void onLoaderReset(Loader<AsyncResourceLoader.Result<Credential>> loader) {
-            message.setText("");
             getActivity().setProgressBarIndeterminateVisibility(false);
-            button.setEnabled(true);
         }
 
         @Override
@@ -277,9 +283,39 @@ public class SimpleOAuth2Activity extends FragmentActivity {
             super.onDestroy();
         }
 
-        private void setButtonText(int action) {
-            button.setText(action);
-            button.setTag(action);
+        private void getToken(Loader<AsyncResourceLoader.Result<Credential>> loader,
+                              AsyncResourceLoader.Result<Credential> result){
+            if (result.success) {
+                /* You have your token, send it to your backend for validation */
+                String validatedClaims = validateToken(SERVICE_URL,
+                        result.data.getAccessToken());
+                txtDetails.setText(String.format(getView().getContext().getString(R.string.validated_claims), validatedClaims));
+
+                /* Now you can use the claims data for your App-specific logic! */
+                hasToken(true);
+            } else {
+                hasToken(false);
+            }
+        }
+
+        private void deleteToken(Loader<AsyncResourceLoader.Result<Credential>> loader,
+                              AsyncResourceLoader.Result<Credential> result){
+            hasToken(false);
+        }
+
+        private void hasToken(boolean hasToken) {
+            if (hasToken){
+                btnLogin.setVisibility(View.INVISIBLE);
+                btnDeleteToken.setVisibility(View.VISIBLE);
+                btnEditProfile.setVisibility(View.VISIBLE);
+            }
+            else {
+                btnLogin.setEnabled(true);
+
+                btnLogin.setVisibility(View.VISIBLE);
+                btnDeleteToken.setVisibility(View.INVISIBLE);
+                btnEditProfile.setVisibility(View.INVISIBLE);
+            }
         }
 
         private static class GetTokenLoader extends AsyncResourceLoader<Credential> {
@@ -294,10 +330,18 @@ public class SimpleOAuth2Activity extends FragmentActivity {
             @Override
             public Credential loadResourceInBackground() throws Exception {
                 Credential credential =
-                        oauth.authorizeExplicitly(getContext().getString(R.string.token_azureb2c),
-                                null, null).getResult();
+                        oauth.authorizeExplicitly(Azureb2cConstants.USER, null, null).getResult();
+
                 LOGGER.info("Access token: " + credential.getAccessToken());
-                LOGGER.info("Refresh Token: " + credential.getRefreshToken());
+                LOGGER.info("Refresh token: " + credential.getRefreshToken());
+                LOGGER.info("Refresh token expiration: " + credential.getExpiresInSeconds());
+
+                if (credential.getExpiresInSeconds() < 0) {
+                    LOGGER.info("Refresh token expired. Deleting creds and re-prompting for creds");
+                    oauth.deleteCredential(Azureb2cConstants.USER, null, null).getResult();
+                    credential = oauth.authorizeExplicitly(Azureb2cConstants.USER, null, null).getResult();
+                }
+
                 return credential;
             }
 
@@ -324,10 +368,9 @@ public class SimpleOAuth2Activity extends FragmentActivity {
             public Credential loadResourceInBackground() throws Exception {
 
                 /* Wipes the tokens out of the persistent storage */
-                success = oauth.deleteCredential(getContext().getString(R.string.token_azureb2c),
-                        null, null).getResult();
+                success = oauth.deleteCredential(Azureb2cConstants.USER, null, null).getResult();
 
-                /* Clears all the webviews session cookies, will clear other apps sessions.
+                /* Clears all the web views session cookies, will clear other apps sessions.
                  * Recommendation is for app to set a persistent flag and then do prompt=force
                  */
                 CookieSyncManager cookieSyncMngr=CookieSyncManager.createInstance(getContext());
@@ -338,7 +381,7 @@ public class SimpleOAuth2Activity extends FragmentActivity {
                 cookieSyncMngr.stopSync();
                 cookieSyncMngr.sync();
 
-                LOGGER.info("token deleted: " + success);
+                LOGGER.info("Token deleted: " + success);
                 return null;
             }
 
@@ -346,6 +389,34 @@ public class SimpleOAuth2Activity extends FragmentActivity {
             public void updateErrorStateIfApplicable(Result<Credential> result) {
                 result.success = success;
                 result.errorMessage = result.success ? null : "error";
+            }
+        }
+
+        private static class EditProfileLoader extends AsyncResourceLoader<Credential> {
+
+            private final OAuthManager oauth;
+
+            public EditProfileLoader(Context context, OAuthManager oauth) {
+                super(context);
+                this.oauth = oauth;
+            }
+
+            @Override
+            public Credential loadResourceInBackground() throws Exception {
+                oauth.deleteCredential(Azureb2cConstants.USER_EDIT_PROFILE, null, null).getResult();
+                Credential credential = oauth.authorizeExplicitly(Azureb2cConstants.USER_EDIT_PROFILE, null, null).getResult();
+
+                LOGGER.info("Access token (edit profile): " + credential.getAccessToken());
+                LOGGER.info("Refresh token (edit profile): " + credential.getRefreshToken());
+                LOGGER.info("Refresh token expiration (edit profile): " + credential.getExpiresInSeconds());
+
+                return credential;
+            }
+
+            @Override
+            public void updateErrorStateIfApplicable(Result<Credential> result) {
+                result.success = true;
+                result.errorMessage = null;
             }
         }
     }
