@@ -8,11 +8,15 @@ var morgan = require("morgan");
 var passport = require("passport");
 var BearerStrategy = require('passport-azure-ad').BearerStrategy;
 
+// TODO: Update the first 3 variables
+var tenantID = "fabrikamb2c.onmicrosoft.com";
+var clientID = "33ae356b-b6d1-4fb7-80b9-949349f02b99";
+var policyName = "B2C_1_SUSI";
+
 var options = {
-    // TODO: Update the first 3 variables
-    identityMetadata: "https://login.microsoftonline.com/<Tenant Name e.g. mytenant.onmicrosoft.com>/v2.0/.well-known/openid-configuration/", // Update with your tenant name
-    policyName: '<My SiSu Policy Name>', // Replace with your Policy Name 
-    clientID: "<Client/App ID>", // Replace with your Client/App ID
+    identityMetadata: "https://login.microsoftonline.com/" + tenantID + "/v2.0/.well-known/openid-configuration/",
+    clientID: clientID,
+    policyName: policyName,
     isB2C: true,
     validateIssuer: false,
     loggingLevel: 'info',

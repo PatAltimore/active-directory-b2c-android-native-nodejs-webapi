@@ -1,7 +1,7 @@
 ---
 services: active-directory-b2c
 platforms: android, node.js
-author: dadobali
+author: danieldobalian
 ---
 
 # Azure AD B2C Android Sample
@@ -33,11 +33,11 @@ To use Azure AD B2C, you'll first need to create an Azure AD B2C tenant, registe
 
 2. Inside `/samples/java/.../azureb2c/Azureb2cConstants.java`, replace the following fields:
 
+	- `TENANT_ID` with the name of your Azure AD B2C tenant.
+
 	- `CLIENT_ID` which can be found in the Azure Portal B2C under the label Application ID.
 
-	- `<Your Policy Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of the sign in/sign up policy.
-
-	- `<Your Tenant Name>` inside the `AUTHORIZATION_ENDPOINT_URL` and `TOKEN_SERVER_URL` with the name of your Azure AD B2C tenant. 
+	- `POLICY_NAME` with the name of the sign in/sign up policy.
 
 3. Go ahead and try the app.  You'll be able to see your custom experience, sign up for an account, and sign in to an existing account. The app will immediately crash after you sign in unless you complete the Node.JS steps! The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`.
 
@@ -52,12 +52,13 @@ meaning tokens are stored in both persistent storage and in session cookies.  Wh
 1. You should've already cloned the app before, go ahead and open the `token-validator-service-nodejs/index.js` with any text editor. Make sure you've [installed Node](https://nodejs.org/en/download/). 
 
 2. Replace the following fields:
+ 
+	- `tenantID` with the name of your Azure AD B2C tenant.
 
-	- `clientID` with the same Client/App ID as you used in the Android code. 
+	- `clientID` with the same Client/App ID as you used in the Android code.
 
 	- `policyName` with the same name as before.
 
-	- `<Your Tenant Name>` inside the identityMetadata variable with the name of your Azure AD B2C tenant you created.
 
 3. Install the node dependencies: 
 
