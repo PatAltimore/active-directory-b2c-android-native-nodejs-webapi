@@ -51,6 +51,7 @@ android {
       res.srcDirs = ['res']
     }
   }
+    buildToolsVersion '25.0.0'
 }
 
 

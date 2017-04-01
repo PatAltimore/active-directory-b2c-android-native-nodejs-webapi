@@ -49,7 +49,7 @@ subprojects {
       mavenCentral()
     }
     dependencies {
-      classpath 'com.android.tools.build:gradle:2.1.2'
+      classpath 'com.android.tools.build:gradle:2.3.0'
       classpath 'com.github.jcandksolutions.gradle:android-unit-test:2.1.1'
       classpath 'com.github.dcendents:android-maven-plugin:1.0'
     }
