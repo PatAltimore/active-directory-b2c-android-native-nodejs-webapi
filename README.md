@@ -7,9 +7,12 @@ author: danieldobalian
 # An Android application with Azure AD B2C using OAuth
 
 > [!NOTE]
-> This sample is a public preview of how to use Azure AD B2C with Android. It is important to note Google [has announced](https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html) that they will end support for embedded web-views on April 20, 2017.  We are taking steps to prepare for this change, and will publish new code samples and recommendations soon.  At that point, any app that supports Google authentication will be required to switch to using the device browser which will require using a new oAuth2.0 library.  
+> **Use our [newer Android AppAuth sample](https://github.com/Azure-Samples/active-directory-android-native-appauth-b2c).** 
 > 
+> This sample is intended to demonstrate Azure AD B2C's compatibility with OAuth 3rd party libraries, however it has two major drawbacks compared to the newer AppAuth sample:
 >
+> 1. This sample will **not** work for Google sign-in given that it uses embedded web-views which Google [announced](https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html) that they will end support for on April 20, 2017. AppAuth uses system web-views which will continue to work with Google sign-ins.
+> 2. The use of OAuth for sign-in requires a you to stand up a token validation service (included in the sample) which is not required when using OpenID Connect libraries such as AppAuth. 
 
 This sample demonstrates how to use Azure AD B2C with a prominent 3rd party Android OAuth2.0 library [android-oauth-client](https://github.com/wuman/android-oauth-client). There's 3 parts of this sample you'll have to setup to get this running: do some configurations in our Azure portal and define your experience, configure/run the Android app, and finally configure/run the Node.js Web API. 
 
