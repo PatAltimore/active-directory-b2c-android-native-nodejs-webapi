@@ -45,7 +45,7 @@ To use Azure AD B2C, you'll first need to create an Azure AD B2C tenant, registe
 3. Go ahead and try the app.  You'll be able to see your custom experience, sign up for an account, and sign in to an existing account. The app will immediately crash after you sign in unless you complete the Node.JS steps! The core oAuth2.0 code is located in `/samples/java/.../azureb2c/SimpleOAuth2Activity.java`.
 
 > [!NOTE]
-> This sample uses the Android embeded 
+> This sample uses the Android embedded 
 meaning tokens are stored in both persistent storage and in session cookies.  When the sample performs a logout, it will remove all session cookies as Android doesn't allow specific session cookies to be removed. 
 > 
 >
